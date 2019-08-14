@@ -46,6 +46,19 @@ $tasks = [
         'status' => false
     ],
 ];
+
+function get_sum_tasks ($tasks_list, $project) {
+    $count = 0;
+    foreach ($tasks_list as $task_item) {
+        foreach ($task_item as $category) {
+            if ($category === $project) {
+                $count++;
+            }
+        }
+    }
+    return $count;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -90,7 +103,7 @@ $tasks = [
                         <?php foreach ($projects as $project_name): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?=$project_name; ?></a>
-                            <span class="main-navigation__list-item-count">0</span>
+                            <span class="main-navigation__list-item-count"><?php print(get_sum_tasks($tasks, $project_name)); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
