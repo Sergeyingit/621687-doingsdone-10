@@ -1,3 +1,6 @@
+<?php
+require_once('functions.php');
+?>
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
 
@@ -56,7 +59,7 @@
                     <?php foreach ($tasks as $task): ?>
                         <?php if (!$task['is_complete'] or ($task['is_complete'] and $show_complete_tasks)): ?>
 
-                            <tr class="tasks__item task <?= $task['is_complete'] ? 'task--completed' : ''; ?> ">
+                            <tr class="tasks__item task <?= $task['is_complete'] ? 'task--completed' : ''; ?> <?= checks_urgency($task['date']) ? 'task--important' : ''; ?> ">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
                                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">

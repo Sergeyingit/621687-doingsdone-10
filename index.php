@@ -47,7 +47,6 @@ $tasks = [
     ],
 ];
 
-
 require_once('functions.php');
 
 $page_content = include_template('main.php', [

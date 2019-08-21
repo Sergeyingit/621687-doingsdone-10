@@ -38,3 +38,30 @@ function get_sum_tasks ($tasks_list, $project) {
     }
     return $count;
 }
+
+/**
+ * Проверяет сколько часов осталось до завершения задачи
+ *
+ * Принимает строковый аргумент - дату, если дата есть - проверяет
+ * сколько часов осталось до её наступления, если меньше суток - возвращает true
+ *
+ * @param string $task_execution_time Параметр функции. Дата проекта
+ * @return boolean
+ */
+function checks_urgency ($task_execution_time) {
+    $urgency = false;
+    if ($task_execution_time) {
+        $ts = time();
+        $end_ts = strtotime($task_execution_time);
+        $hour = 24;
+        $secs_in_hour = 3600;
+        $ts_diff = $end_ts - $ts;
+        $days_until_end = floor($ts_diff / $secs_in_hour);
+
+        if ($days_until_end <= $hour) {
+            $urgency = true;
+        }
+    }
+
+    return $urgency;
+}
