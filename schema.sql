@@ -2,7 +2,7 @@ CREATE DATABASE doingsdone;
 
 USE doingsdone;
 
-CREATE TABLE project (
+CREATE TABLE projects (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name CHAR(128) NOT NULL UNIQUE,
   user_id INT
@@ -26,3 +26,8 @@ CREATE TABLE users (
   name CHAR(128) NOT NULL,
   password  CHAR(64) NOT NULL
 );
+
+CREATE INDEX project_name ON projects(name);
+CREATE INDEX task_name ON tasks(name);
+CREATE UNIQUE INDEX email ON users(email);
+
