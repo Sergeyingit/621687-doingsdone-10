@@ -49,19 +49,18 @@ function get_sum_tasks ($tasks_list, $project) {
  * @return boolean
  */
 function checks_urgency ($task_execution_time) {
-    $urgency = false;
     if ($task_execution_time) {
-        $ts = time();
-        $end_ts = strtotime($task_execution_time);
         $hour = 24;
-        $secs_in_hour = 3600;
-        $ts_diff = $end_ts - $ts;
-        $days_until_end = floor($ts_diff / $secs_in_hour);
+        $dt_now = date_create('now');
+        $dt_end = date_create($task_execution_time);
+        $dt_diff = date_diff($dt_end, $dt_now);
+        $days_count = date_interval_format($dt_diff, "%a");
+        $hours_count = $days_count * $hour;
 
-        if ($days_until_end <= $hour) {
-            $urgency = true;
+        if ($hours_count <= $hour) {
+            return true;
         }
     }
 
-    return $urgency;
+    return false;
 }
