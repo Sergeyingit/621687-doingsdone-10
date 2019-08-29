@@ -8,6 +8,8 @@ CREATE TABLE projects (
   user_id INT
 );
 
+CREATE INDEX project_name ON projects(name);
+
 CREATE TABLE tasks (
   id INT AUTO_INCREMENT PRIMARY KEY,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -18,6 +20,8 @@ CREATE TABLE tasks (
   project_id INT
 );
 
+CREATE INDEX task_name ON tasks(name);
+
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -26,7 +30,6 @@ CREATE TABLE users (
   password  CHAR(128) NOT NULL
 );
 
-CREATE INDEX project_name ON projects(name);
-CREATE INDEX task_name ON tasks(name);
-CREATE UNIQUE INDEX email ON users(email);
+
+
 
