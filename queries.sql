@@ -25,7 +25,7 @@ SET  name = 'Заказать пиццу', project_id = 4;
 /*
 получить список из всех проектов для одного пользователя
 */
-SELECT u.name AS User, p.name AS Project FROM users u JOIN projects p ON u.id = p.user_id WHERE u.name = snow;
+SELECT u.name AS User, p.name AS Project FROM users u JOIN projects p ON u.id = p.user_id WHERE u.name = 'snow';
 
 /*
 получить список из всех задач для одного проекта
@@ -42,3 +42,23 @@ UPDATE tasks SET complete = 1 WHERE name = 'Заказать пиццу';
 */
 
 UPDATE tasks SET name = 'Сделать новое задание' WHERE id = 3;
+
+
+INSERT INTO users (email, name, password)
+VALUES ('new@gmail.com', 'newuser', 'password1234');
+
+INSERT INTO projects (name, user_id)
+VALUES ('Развлечения', 3), ('Покупки', 3);
+
+INSERT INTO tasks
+SET name = 'Сходить в кино на новый фильм', date_completed = '01.12.2019', project_id = 6;
+
+INSERT INTO tasks
+SET name = 'Посетить выставку', date_completed = '01.11.2019', project_id = 6;
+
+INSERT INTO tasks
+SET name = 'Купить продукты', date_completed = '02.12.2019', project_id = 7;
+
+
+
+
