@@ -8,8 +8,8 @@ require_once('functions.php');
                     <ul class="main-navigation__list">
                         <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#"><?= strip_tags($project); ?></a>
-                            <span class="main-navigation__list-item-count"><?= get_sum_tasks($tasks, $project); ?></span>
+                            <a class="main-navigation__list-item-link" href="#"><?= strip_tags($project['name']); ?></a>
+                            <span class="main-navigation__list-item-count"><?= get_sum_tasks($tasks, $project['name']); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>

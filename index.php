@@ -51,41 +51,17 @@ require_once('functions.php');
 
 require_once('db.php');
 
-$link = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
-mysqli_set_charset($link, 'utf8');
+
 
 if(!$link) {
     $error = mysqli_connect_error();
     print($error);
 } else {
     $sql_projects = "SELECT p.name FROM projects p JOIN users u ON p.user_id = u.id WHERE u.name = 'newuser'";
-    $result = mysqli_query($link, $sql_projects);
-
-    if (!$result) {
-        $error = mysqli_error($link);
-        print($error);
-    } else {
-        $projects_array = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $projects = [];
-        foreach($projects_array as $project) {
-            $projects[] = $project['name'];
-        }
-    }
-
     $sql_tasks = "SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.name = 'newuser'";
-    $result = mysqli_query($link, $sql_tasks);
 
-    if (!$result) {
-        $error = mysqli_error($link);
-        print($error);
-    } else {
-        $tasks_array = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $tasks = [];
-        foreach($tasks_array as $task) {
-            $tasks[] = $task;
-        }
-
-    }
+    $projects = get_data_from_db ($link, $sql_projects);
+    $tasks = get_data_from_db ($link, $sql_tasks);
 }
 
 $page_content = include_template('main.php', [

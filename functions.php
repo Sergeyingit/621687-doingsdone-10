@@ -64,3 +64,27 @@ function checks_urgency ($task_execution_time) {
 
     return false;
 }
+
+
+/**
+ * Возвращает массив засроса sql
+ *
+ * Принимает ресурс соединения и sql запрос
+ * сохраняет результат запроса в переменную, если нет ошибки - возвращает массив
+ * с данными из БД
+ *
+ * @param $link Принимает ресурс соединения
+ * @param string $sql Принимает запрос sql
+ * @return array
+ */
+function get_data_from_db ($link, $sql) {
+    $result = mysqli_query($link, $sql);
+    if (!$result) {
+        $error = mysqli_error($link);
+        print($error);
+    } else {
+        $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    return $array;
+}
