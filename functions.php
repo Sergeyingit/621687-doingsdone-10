@@ -77,14 +77,11 @@ function checks_urgency ($task_execution_time) {
  * @param string $sql Принимает запрос sql
  * @return array
  */
-function get_data_from_db ($link, $sql) {
+function get_data_from_db($link, $sql) {
     $result = mysqli_query($link, $sql);
     if (!$result) {
-        $error = mysqli_error($link);
-        print($error);
-    } else {
-        $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        return mysqli_error($link);
     }
 
-    return $array;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }

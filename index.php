@@ -6,20 +6,8 @@ require_once('functions.php');
 
 require_once('db.php');
 
-
-
-if(!$link) {
-    $error = mysqli_connect_error();
-    print($error);
-} else {
-    $sort_field = '';
-
-    if ($_GET['id']) {
-        $sort_field = 'AND ' . 'p.id = ' . $_GET['id'];
-    }
-
-    $sql_projects = "SELECT p.name, p.id FROM projects p JOIN users u ON p.user_id = u.id WHERE u.name = 'newuser'";
-    $sql_tasks = "SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.name = 'newuser'" . $sort_field;
+    $sql_projects = "SELECT p.name, p.id FROM projects p JOIN users u ON p.user_id = u.id";
+    $sql_tasks = "SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id";
 
 
 
@@ -27,7 +15,27 @@ if(!$link) {
     $tasks = get_data_from_db ($link, $sql_tasks);
 
 
-}
+
+    if (!empty($_GET['id'])) {
+        $sql_tasks .= ' WHERE p.id = ?';
+        $stmt = mysqli_prepare($link, $sql_tasks);
+        mysqli_stmt_bind_param($stmt, 'i', $_GET['id']);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    // Собираю массив id проектов, для проверки есть ли в нём id из параметра запроса
+    $id_projects = [];
+    foreach($projects as $project) {
+        $id_projects[] = $project['id'];
+    }
+
+    if (!in_array($_GET['id'], $id_projects)) {
+        http_response_code(404);
+        echo 'error';
+    }
+
 
 $page_content = include_template('main.php', [
     'projects' => $projects,
