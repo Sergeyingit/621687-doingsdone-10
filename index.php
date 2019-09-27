@@ -6,8 +6,8 @@ require_once('functions.php');
 
 require_once('db.php');
 
-    $sql_projects = "SELECT p.name, p.id FROM projects p JOIN users u ON p.user_id = u.id";
-    $sql_tasks = "SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id";
+    $sql_projects = 'SELECT p.name, p.id FROM projects p JOIN users u ON p.user_id = u.id';
+    $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id';
 
 
 
@@ -18,8 +18,7 @@ require_once('db.php');
 
     if (!empty($_GET['id'])) {
         $sql_tasks .= ' WHERE p.id = ?';
-        $stmt = mysqli_prepare($link, $sql_tasks);
-        mysqli_stmt_bind_param($stmt, 'i', $_GET['id']);
+        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -31,9 +30,9 @@ require_once('db.php');
         $id_projects[] = $project['id'];
     }
 
-    if (!in_array($_GET['id'], $id_projects)) {
+    if (!isset($_GET['id']) OR !in_array($_GET['id'], $id_projects)) {
         http_response_code(404);
-        echo 'error';
+        $tasks = [];
     }
 
 
@@ -42,6 +41,7 @@ $page_content = include_template('main.php', [
     'tasks' => $tasks,
     'show_complete_tasks' => $show_complete_tasks
 ]);
+
 
 
 
