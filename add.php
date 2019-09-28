@@ -5,7 +5,7 @@ require_once('db.php');
 // получаю список проектов для валидации
 $sql_projects = 'SELECT p.name, p.id FROM projects p';
 $projects = get_data_from_db ($link, $sql_projects);
-$projects_name = array_column($projects, 'name');
+$projects_id = array_column($projects, 'id');
 print_r($projects);
 echo '<br><br><br>';
 print_r($projects_name);
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'project' => function() {
             return validateFilled('project');
         },
-        'project' => function() use ($projects_name) {
-            return validateProject('project');
+        'project_id' => function() use ($projects_id) {
+            return validateProject('id');
         }
     ];
 
@@ -37,6 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $rule = $rules[$key];
             $errors[$key] = $rule();
         }
+    }
+
+    $date = $_POST['date'];
+
+
+    if(is_date_valid($date)) {
+        $dt_now = date_create('now');
+        $dt_diff = date_diff($date, $dt_now);
+        $days_count = date_interval_format($dt_diff, "%a");
+        $errors['date'] = ($days_count < 0) ? 'Дата не может быть меньше текущей' : '';
+    } else {
+        $errors['date'] = 'Не верный формат даты';
     }
 
     $errors = array_filter($errors);

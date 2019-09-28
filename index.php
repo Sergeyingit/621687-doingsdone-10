@@ -14,7 +14,7 @@ require_once('db.php');
     $projects = get_data_from_db ($link, $sql_projects);
     $tasks = get_data_from_db ($link, $sql_tasks);
 
-$test = 10;
+
 
     if (!empty($_GET['id'])) {
         $sql_tasks .= ' WHERE p.id = ?';
