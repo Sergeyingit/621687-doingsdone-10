@@ -139,3 +139,64 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
     return $stmt;
 }
+
+/**
+ * Получает значение поля
+ *
+ * @param $name Имя поля
+ * @return Значение поля полученное из формы
+ */
+function getPostVal($name) {
+    return $_POST[$name] ?? "";
+}
+
+/**
+ * Функция проверки обязательного заполнения поля
+ *
+ * @param $name Имя поля
+ * @return Текст ошибки или ничего, если ошибки нет
+ */
+function validateFilled($name) {
+    if (empty($_POST[$name])) {
+        return "Это поле должно быть заполнено";
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки категории проекта
+ *
+ * @param $name Имя поля
+ * @return Текст ошибки или ничего, если ошибки нет
+ */
+function validateProject($name, $allowed_list) {
+    $name = $_POST[$name];
+
+    if (!in_array($name, $allowed_list)) {
+        return "Указана несуществующая категория";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
+ *
+ * Примеры использования:
+ * is_date_valid('2019-01-01'); // true
+ * is_date_valid('2016-02-29'); // true
+ * is_date_valid('2019-04-31'); // false
+ * is_date_valid('10.10.2010'); // false
+ * is_date_valid('10/10/2010'); // false
+ *
+ * @param string $date Дата в виде строки
+ *
+ * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
+ */
+function is_date_valid(string $date) : bool {
+    $format_to_check = 'Y-m-d';
+    $dateTimeObj = date_create_from_format($format_to_check, $date);
+
+    return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
+}
