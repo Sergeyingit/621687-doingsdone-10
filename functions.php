@@ -141,12 +141,28 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 }
 
 /**
+ * Получает результат выполнения подготовленного выражения
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return array Массив с данными из БД
+ */
+function get_prepare_request($link, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data = []);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
  * Получает значение поля
  *
  * @param $name Имя поля
  * @return Значение поля полученное из формы
  */
-function getPostVal($name) {
+function get_post_val($name) {
     return $_POST[$name] ?? "";
 }
 
@@ -156,8 +172,8 @@ function getPostVal($name) {
  * @param $name Имя поля
  * @return Текст ошибки или ничего, если ошибки нет
  */
-function validateFilled($name) {
-    if (empty($_POST[$name])) {
+function validate_filled($name) {
+    if (empty(trim($_POST[$name]))) {
         return "Это поле должно быть заполнено";
     }
 
@@ -170,8 +186,8 @@ function validateFilled($name) {
  * @param $name Имя поля
  * @return Текст ошибки или ничего, если ошибки нет
  */
-function validateProject($name, $allowed_list) {
-    $name = $_POST[$name];
+function validate_project($name, $allowed_list) {
+    $id = $_POST[$name];
 
     if (!in_array($name, $allowed_list)) {
         return "Указана несуществующая категория";
@@ -199,4 +215,28 @@ function is_date_valid(string $date) : bool {
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
     return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
+}
+
+/**
+ * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД' и чтобы не была меньше текущей даты
+ *
+ * Внутри использует другую функцию "is_date_valid"
+ * @param $name Имя поля
+ *
+ * @return Возвращает текст ошибки или null, если ошибки нет
+ */
+function validate_date($name) {
+    $date = $_POST[$name];
+
+    if(empty($date)) {
+        return null;
+    } elseif (is_date_valid($date)) {
+        $dt_now = date_create('now');
+        $dt_end = date_create($date);
+        $dt_diff = date_diff($dt_now, $dt_end);
+        $days_count = date_interval_format($dt_diff, '%r%a');
+        return ($days_count < 0) ? 'Дата не может быть меньше текущей' : null;
+    } else {
+        return 'Не верный формат даты';
+    }
 }

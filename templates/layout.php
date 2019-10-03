@@ -33,7 +33,8 @@
         </header>
 
         <div class="content">
-            <?= $content; ?>
+            <?=$navigation; ?>
+            <?=$content; ?>
         </div>
     </div>
 </div>
