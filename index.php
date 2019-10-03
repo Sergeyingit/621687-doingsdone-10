@@ -5,24 +5,32 @@ $show_complete_tasks = rand(0, 1);
 require_once('functions.php');
 
 require_once('db.php');
+require_once('ini.php');
 
-    $sql_projects = "SELECT p.name, p.id FROM projects p JOIN users u ON p.user_id = u.id";
-    $sql_tasks = "SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id";
+    // $sql_projects = 'SELECT p.name, p.id FROM projects p JOIN users u ON p.user_id = u.id';
+    // $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id';
 
 
 
-    $projects = get_data_from_db ($link, $sql_projects);
-    $tasks = get_data_from_db ($link, $sql_tasks);
+
+    // $projects = db_get_prepare_stmt ($link, $sql_projects);
+    // mysqli_stmt_execute($projects);
+    // $result = mysqli_stmt_get_result($projects);
+    $projects = get_prepare_request($link, $sql_projects);
+    $tasks_all = get_prepare_request($link, $sql_tasks);
+    $tasks = $tasks_all;
+
+
 
 
 
     if (!empty($_GET['id'])) {
         $sql_tasks .= ' WHERE p.id = ?';
-        $stmt = mysqli_prepare($link, $sql_tasks);
-        mysqli_stmt_bind_param($stmt, 'i', $_GET['id']);
+        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        // $tasks = get_prepare_request($link, $sql_tasks, [$_GET['id']]);
     }
 
     // Собираю массив id проектов, для проверки есть ли в нём id из параметра запроса
@@ -31,24 +39,36 @@ require_once('db.php');
         $id_projects[] = $project['id'];
     }
 
-    if (!in_array($_GET['id'], $id_projects)) {
+    if (isset($_GET['id']) AND !in_array($_GET['id'], $id_projects)) {
         http_response_code(404);
-        echo 'error';
+        $page_content = include_template('error.php', [
+            'error_message' => 'Задач не найдено'
+        ]);
+    } else {
+        $page_content = include_template('main.php', [
+            'projects' => $projects,
+            'tasks' => $tasks,
+            'show_complete_tasks' => $show_complete_tasks
+        ]);
     }
 
 
-$page_content = include_template('main.php', [
+
+$navigation = include_template('navigation.php', [
     'projects' => $projects,
-    'tasks' => $tasks,
-    'show_complete_tasks' => $show_complete_tasks
+    'tasks' => $tasks_all
 ]);
 
 
-
-
+// $page_content = include_template('main.php', [
+//     'projects' => $projects,
+//     'tasks' => $tasks,
+//     'show_complete_tasks' => $show_complete_tasks
+// ]);
 
 
 $layout_content = include_template('layout.php', [
+    'navigation' => $navigation,
     'content' => $page_content,
     'user' => $user,
     'title' => 'Дела в порядке'

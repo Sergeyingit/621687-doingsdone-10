@@ -1,24 +1,4 @@
-<?php
-require_once('functions.php');
-?>
-            <section class="content__side">
-                <h2 class="content__side-heading">Проекты</h2>
 
-                <nav class="main-navigation">
-                    <ul class="main-navigation__list">
-                        <?php foreach ($projects as $project): ?>
-                        <li class="main-navigation__list-item <?= ($project['id'] === $_GET['id']) ? 'main-navigation__list-item--active' : '' ;?>">
-                            <a class="main-navigation__list-item-link" href="?id=<?= $project['id'] ?> "><?= strip_tags($project['name']); ?></a>
-                            <span class="main-navigation__list-item-count"><?= get_sum_tasks($tasks, $project['name']); ?></span>
-                        </li>
-
-                        <?php endforeach; ?>
-                    </ul>
-                </nav>
-
-                <a class="button button--transparent button--plus content__side-button"
-                   href="pages/form-project.html" target="project_add">Добавить проект</a>
-            </section>
 
             <main class="content__main">
                 <h2 class="content__main-heading">Список задач</h2>
@@ -69,7 +49,7 @@ require_once('functions.php');
                                 </td>
 
                                 <td class="task__file">
-                                    <a class="download-link" href="#">Home.psd</a>
+                                    <a class="download-link" href="#"><?=$task['file']; ?>Home.psd</a>
                                 </td>
 
                                 <td class="task__date"><?= strip_tags($task['date']); ?></td>

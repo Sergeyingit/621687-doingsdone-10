@@ -8,3 +8,5 @@ if(!$link) {
     $error = mysqli_connect_error();
     print($error);
 }
+
+date_default_timezone_set('Europe/Moscow');
