@@ -84,7 +84,7 @@ $page_content = include_template('add.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'user' => $user,
+    'user' => $_SESSION['user'],
     'title' => 'Дела в порядке'
 ]);
 

@@ -5,7 +5,7 @@
       <main class="content__main">
         <h2 class="content__main-heading">Добавление задачи</h2>
 
-        <form class="form"  action="add.php" method="post" autocomplete="off">
+        <form class="form"  action="add.php" method="post"  enctype="multipart/form-data" autocomplete="off">
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
@@ -17,9 +17,10 @@
             <label class="form__label" for="project">Проект <sup>*</sup></label>
 
             <select class="form__input form__input--select <?= isset($errors['project']) ?  'form__input--error' : ''; ?>" name="project" id="project">
-              <?php foreach($projects as $project): ?>
+            <option value=""></option>
+            <?php foreach($projects as $project): ?>
               <option value="<?= $project['id']; ?>">
-                <?= $project['name']; ?>
+                <!-- <?= $project['name']; ?> -->
               </option>
               <?php endforeach; ?>
             </select>

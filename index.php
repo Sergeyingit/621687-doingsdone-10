@@ -16,17 +16,17 @@ require_once('init.php');
     // $projects = db_get_prepare_stmt ($link, $sql_projects);
     // mysqli_stmt_execute($projects);
     // $result = mysqli_stmt_get_result($projects);
-    $projects = get_prepare_request($link, $sql_projects);
-    $tasks_all = get_prepare_request($link, $sql_tasks);
+    // $projects = get_prepare_request($link, $sql_projects);
+    // $tasks_all = get_prepare_request($link, $sql_tasks);
     $tasks = $tasks_all;
 
 
 
 
-
+if(isset($_SESSION['user'])){
     if (!empty($_GET['id'])) {
-        $sql_tasks .= ' WHERE p.id = ?';
-        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
+        $sql_tasks .= ' AND p.id = ?';
+        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_SESSION['user']['id'], $_GET['id']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -52,12 +52,22 @@ require_once('init.php');
         ]);
     }
 
+    $navigation = include_template('navigation.php', [
+        'projects' => $projects,
+        'tasks' => $tasks_all
+    ]);
+
+} else {
+    $page_content = include_template('guest.php', []);
+}
 
 
-$navigation = include_template('navigation.php', [
-    'projects' => $projects,
-    'tasks' => $tasks_all
-]);
+
+
+// $navigation = include_template('navigation.php', [
+//     'projects' => $projects,
+//     'tasks' => $tasks_all
+// ]);
 
 
 // $page_content = include_template('main.php', [
@@ -70,7 +80,7 @@ $navigation = include_template('navigation.php', [
 $layout_content = include_template('layout.php', [
     'navigation' => $navigation,
     'content' => $page_content,
-    'user' => $user,
+    'user' => $_SESSION['user'],
     'title' => 'Дела в порядке'
 ]);
 

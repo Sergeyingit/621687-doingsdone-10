@@ -20,19 +20,19 @@
             </a>
             <?php if (isset($_SESSION['user'])): ?>
                 <div class="main-header__side">
-                    <a class="main-header__side-item button button--plus open-modal" href="pages/form-task.html">Добавить задачу</a>
+                    <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
-                            <p>Константин</p>
+                            <p><?=$user['name']; ?></p>
 
-                            <a href="#">Выйти</a>
+                            <a href="logout.php">Выйти</a>
                         </div>
                     </div>
                 </div>
             <?php else: ?>
                 <div class="main-header__side">
-                    <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
+                    <a class="main-header__side-item button button--transparent" href="auth.php">Войти</a>
                 </div>
             <?php endif; ?>
         </header>
@@ -52,7 +52,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <?=isset($_SESSION['user']) ? '<a class="main-footer__button button button--plus" href="pages/form-task.html">Добавить задачу</a>' : ''; ?>
+        <?=isset($_SESSION['user']) ? '<a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>' : ''; ?>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

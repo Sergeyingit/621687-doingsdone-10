@@ -1,7 +1,5 @@
 <?php
-require_once('functions.php');
 
-require_once('db.php');
 require_once('init.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -34,18 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = db_get_prepare_stmt($link, $sql, [$_POST['email']]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     if (!count($errors) AND $user) {
         if (password_verify($_POST['password'], $user['password'])) {
             $_SESSION['user'] = $user;
+        } else {
+            $errors['password'] = 'Вы ввели неверный пароль';
         }
-        else {
-            $errors['password'] = 'Неверный пароль';
-        }
-    }
-    else {
-        $errors['email'] = 'Такой пользователь не найден';
+    } else {
+        $errors['email'] = $errors['email'] ?? 'Вы ввели неверный email';
     }
 
     if (!count($errors)) {

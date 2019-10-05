@@ -1,10 +1,6 @@
 <?php
-require_once('functions.php');
-require_once('db.php');
-require_once('init.php');
 
-// $projects = get_prepare_request($link, $sql_projects);
-// $tasks = get_data_from_db($link, $sql_tasks);
+require_once('init.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
