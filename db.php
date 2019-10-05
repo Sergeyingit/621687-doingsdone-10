@@ -9,4 +9,3 @@ if(!$link) {
     print($error);
 }
 
-date_default_timezone_set('Europe/Moscow');

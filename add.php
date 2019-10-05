@@ -1,7 +1,7 @@
 <?php
 require_once('functions.php');
 require_once('db.php');
-require_once('ini.php');
+require_once('init.php');
 
 // получаю список проектов для валидации
 // $sql_projects = 'SELECT p.name, p.id FROM projects p';
@@ -84,7 +84,7 @@ $page_content = include_template('add.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'user' => $user,
+    'user' => $_SESSION['user'],
     'title' => 'Дела в порядке'
 ]);
 

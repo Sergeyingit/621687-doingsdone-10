@@ -1,10 +1,6 @@
 <?php
-require_once('functions.php');
-require_once('db.php');
-require_once('ini.php');
 
-// $projects = get_prepare_request($link, $sql_projects);
-// $tasks = get_data_from_db($link, $sql_tasks);
+require_once('init.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -41,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = db_get_prepare_stmt($link, $sql, [$_POST['email']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-        $email = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        if ($email) {
+        $user_id = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        if ($user_id) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
         }
         else {
@@ -60,10 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 }
-$navigation = include_template('navigation.php', [
-    'projects' => $projects,
-    'tasks' => $tasks_all
-]);
+
 
 $page_content = include_template('register.php', [
     'errors' => $errors
@@ -71,7 +64,6 @@ $page_content = include_template('register.php', [
 
 
 $layout_content = include_template('layout.php', [
-    'navigation' => $navigation,
     'content' => $page_content,
     'user' => $user,
     'title' => 'Дела в порядке'
