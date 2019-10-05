@@ -5,9 +5,9 @@ require_once('ini.php');
 
 // получаю список проектов для валидации
 // $sql_projects = 'SELECT p.name, p.id FROM projects p';
-$projects = get_prepare_request($link, $sql_projects);
+// $projects = get_prepare_request($link, $sql_projects);
 // $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id';
-$tasks = get_data_from_db($link, $sql_tasks);
+// $tasks = get_data_from_db($link, $sql_tasks);
 $projects_id = array_column($projects, 'id');
 // print_r($projects);
 // echo '<br><br><br>';
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $navigation = include_template('navigation.php', [
     'projects' => $projects,
-    'tasks' => $tasks
+    'tasks' => $tasks_all
 ]);
 
 $page_content = include_template('add.php', [
