@@ -3,8 +3,8 @@
             <main class="content__main">
                 <h2 class="content__main-heading">Список задач</h2>
 
-                <form class="search-form" action="index.php" method="post" autocomplete="off">
-                    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+                <form class="search-form" action="index.php" method="get" autocomplete="off">
+                    <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
 
                     <input class="search-form__submit" type="submit" name="" value="Искать">
                 </form>
@@ -24,6 +24,9 @@
                     </label>
                 </div>
 
+                <?php if($error_message) : ?>
+                    <?=$error_message; ?>
+                <?php else : ?>
                 <table class="tasks">
                     <?php if ($show_complete_tasks): ?>
                         <tr class="tasks__item task task--completed">
@@ -58,4 +61,5 @@
                     <?php endforeach; ?>
                     <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
                 </table>
+                <?php endif; ?>
             </main>

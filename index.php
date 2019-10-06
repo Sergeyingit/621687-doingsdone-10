@@ -25,8 +25,8 @@ require_once('init.php');
 
 if(isset($_SESSION['user'])){
     if (!empty($_GET['id'])) {
-        $sql_tasks .= ' AND p.id = ?';
-        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_SESSION['user']['id'], $_GET['id']]);
+        $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE p.id = ?';
+        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -41,7 +41,7 @@ if(isset($_SESSION['user'])){
 
     if (isset($_GET['id']) AND !in_array($_GET['id'], $id_projects)) {
         http_response_code(404);
-        $page_content = include_template('error.php', [
+        $page_content = include_template('main.php', [
             'error_message' => 'Задач не найдено'
         ]);
     } else {
@@ -52,6 +52,27 @@ if(isset($_SESSION['user'])){
         ]);
     }
 
+    if(isset($_GET['search'])) {
+        $search = trim($_GET['search']);
+        $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ? AND MATCH(t.name) AGAINST(?)';
+        $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_SESSION['user']['id'], $search]);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        if($tasks) {
+            $page_content = include_template('main.php', [
+                'projects' => $projects,
+                'tasks' => $tasks,
+                'show_complete_tasks' => $show_complete_tasks
+            ]);
+        } else {
+            $page_content = include_template('main.php', [
+                'error_message' => 'Ничего не найдено по вашему запросу'
+            ]);
+        }
+    }
+
     $navigation = include_template('navigation.php', [
         'projects' => $projects,
         'tasks' => $tasks_all
@@ -60,6 +81,7 @@ if(isset($_SESSION['user'])){
 } else {
     $page_content = include_template('guest.php', []);
 }
+
 
 
 
