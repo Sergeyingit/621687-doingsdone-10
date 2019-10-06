@@ -21,6 +21,7 @@ CREATE TABLE tasks (
 );
 
 CREATE INDEX task_name ON tasks(name);
+CREATE FULLTEXT INDEX task_search ON tasks(name);
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,6 +30,7 @@ CREATE TABLE users (
   name CHAR(128) NOT NULL,
   password  CHAR(128) NOT NULL
 );
+
 
 
 
