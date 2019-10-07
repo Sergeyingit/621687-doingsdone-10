@@ -11,10 +11,10 @@
 
                 <div class="tasks-controls">
                     <nav class="tasks-switch">
-                        <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-                        <a href="/" class="tasks-switch__item">Повестка дня</a>
-                        <a href="/" class="tasks-switch__item">Завтра</a>
-                        <a href="/" class="tasks-switch__item">Просроченные</a>
+                        <a href="index.php" class="tasks-switch__item <?=empty($_GET['tasks-filter']) ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                        <a href="index.php?tasks-filter=today" class="tasks-switch__item <?=($_GET['tasks-filter'] == 'today') ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                        <a href="index.php?tasks-filter=tomorrow" class="tasks-switch__item <?=($_GET['tasks-filter'] == 'tomorrow') ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                        <a href="index.php?tasks-filter=past_due" class="tasks-switch__item <?=($_GET['tasks-filter'] == 'past_due') ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
                     </nav>
 
                     <label class="checkbox">
@@ -52,7 +52,9 @@
                                 </td>
 
                                 <td class="task__file">
-                                    <a class="download-link" href="#"><?=$task['file']; ?>Home.psd</a>
+                                    <?php if(!empty($task['file'])): ?>
+                                        <a class="download-link" href="uploads/<?=$task['file'];?>"><?=$task['file']; ?></a>
+                                    <?php endif; ?>
                                 </td>
 
                                 <td class="task__date"><?= strip_tags($task['date']); ?></td>

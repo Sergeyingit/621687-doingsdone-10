@@ -239,4 +239,5 @@ function validate_date($name) {
     } else {
         return 'Не верный формат даты';
     }
+
 }
