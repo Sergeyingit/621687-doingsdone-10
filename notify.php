@@ -36,14 +36,13 @@ if($result) {
         }
 
         $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list .' на ' . $tasks_date;
-         print_r($msg_content);
 
-        // $message = new Swift_Message();
-        // $message->setSubject('Уведомление от сервиса «Дела в порядке»');
-        // $message->setFrom(['keks@phpdemo.ru' => 'Дела в порядке']);
-        // $message->setBcc($recipients);
-        // $message->setBody($msg_content, 'text/plain');
-        // $result = $mailer->send($message);
+        $message = new Swift_Message();
+        $message->setSubject('Уведомление от сервиса «Дела в порядке»');
+        $message->setFrom(['keks@phpdemo.ru' => 'Дела в порядке']);
+        $message->setBcc($recipients);
+        $message->setBody($msg_content, 'text/plain');
+        $result = $mailer->send($message);
 
         if ($result) {
             print('Письмо успешно отправлено');
