@@ -1,0 +1,11 @@
+{
+    "name": "sergeyingit/doingsdone",
+    "description": "to-do list web application",
+    "authors": [
+        {
+            "name": "sergeyingit",
+            "email": "sergeyakkaynt@gmail.com"
+        }
+    ],
+    "require": {}
+}

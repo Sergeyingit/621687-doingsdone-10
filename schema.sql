@@ -1,4 +1,6 @@
-CREATE DATABASE doingsdone;
+CREATE DATABASE doingsdone
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
 
 USE doingsdone;
 
@@ -15,8 +17,8 @@ CREATE TABLE tasks (
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   complete TINYINT DEFAULT 0,
   name CHAR(128) NOT NULL,
-  file VARCHAR,
-  date_completed date,
+  file VARCHAR(255),
+  date_completed date DEFAULT NULL,
   project_id INT
 );
 
