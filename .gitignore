@@ -5,8 +5,7 @@
 *.pdf
 *.psd
 *.sublime*
-*.idea
-*.vscode
+.vscode
 Thumbs.db
 vendor
 uploads/*

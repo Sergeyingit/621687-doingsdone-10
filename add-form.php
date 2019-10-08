@@ -25,12 +25,10 @@ if(isset($_SESSION['user'])){
                     if($input_value == $project['name']) {
                         $errors[$input_name] = 'Проект с таким названием уже существует';
                     }
-                // $errors[$input_name] = ($input_value == $project['name']) ? 'Проект с таким названием уже существует' : '';
                 }
             }
-
         }
-// print_r($projects);
+
         $errors = array_filter($errors);
 
         if(!count($errors)) {

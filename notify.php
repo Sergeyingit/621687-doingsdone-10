@@ -1,12 +1,12 @@
 <?php
 require_once ('init.php');
-// require_once ('vendor/autoload.php');
+require_once ('vendor/autoload.php');
 
-// $transport = new Swift_SmtpTransport("phpdemo.ru", 25);
-// $transport->setUsername("keks@phpdemo.ru");
-// $transport->setPassword("htmlacademy");
+$transport = new Swift_SmtpTransport("phpdemo.ru", 25);
+$transport->setUsername("keks@phpdemo.ru");
+$transport->setPassword("htmlacademy");
 
-// $mailer = new Swift_Mailer($transport);
+$mailer = new Swift_Mailer($transport);
 
 $sql = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, u.name, u.email, u.id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.date_completed = CURDATE() AND t.complete = 0';
 
@@ -44,12 +44,13 @@ if($result) {
         $message->setBody($msg_content, 'text/plain');
         $result = $mailer->send($message);
 
-        if ($result) {
-            print('Письмо успешно отправлено');
-        }
-        else {
-            print('Не удалось отправить письмо');
-        }
+
+    }
+    if ($result) {
+        print('Письмо успешно отправлено');
+    }
+    else {
+        print('Не удалось отправить письмо');
     }
 
 }

@@ -3,9 +3,11 @@
     "description": "to-do list web application",
     "authors": [
         {
-            "name": "sergeyingit",
+            "name": "sergeyingit,",
             "email": "sergeyakkaynt@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
 }

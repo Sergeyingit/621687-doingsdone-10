@@ -26,11 +26,26 @@ require_once('init.php');
 if(isset($_SESSION['user'])){
     if (!empty($_GET['id'])) {
         $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE p.id = ?';
+
         $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
         // $tasks = get_prepare_request($link, $sql_tasks, [$_GET['id']]);
+        if($show_complete_tasks) {
+            $sql_complate_tasks = $sql_tasks . ' AND t.complete = 1';
+            $stmt = db_get_prepare_stmt($link, $sql_complate_tasks, [$_GET['id']]);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $complate_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $tasks = array_merge($tasks, $complate_tasks);
+            print('<br><br><br><br><br><br><br>');
+            print_r($complate_tasks);
+            print('<br><br><br><br><br><br><br>');
+            print_r($tasks);
+            print('<br><br><br><br><br><br><br>');
+        }
+
     }
 
     // Собираю массив id проектов, для проверки есть ли в нём id из параметра запроса
@@ -78,19 +93,13 @@ if(isset($_SESSION['user'])){
 
         switch($_GET['tasks-filter']) {
             case 'today':
-            // $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = '. $_SESSION['user']['id'].' AND t.date_completed = CURDATE()';
-            $sql_tasks .= ' AND t.date_completed = CURDATE()';
-                // $sql_date = 'CURDATE()';
+                $sql_tasks .= ' AND t.date_completed = CURDATE()';
                 break;
             case 'tomorrow':
-            // $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ' . $_SESSION['user']['id'] . ' AND t.date_completed = ADDDATE(CURDATE(), INTERVAL 1 DAY)';
-            $sql_tasks .= ' AND t.date_completed = ADDDATE(CURDATE(), INTERVAL 1 DAY)';
-                // $sql_date = 'ADDDATE(CURDATE(), INTERVAL 1 DAY)';
+                $sql_tasks .= ' AND t.date_completed = ADDDATE(CURDATE(), INTERVAL 1 DAY)';
                 break;
             case 'past_due':
-            // $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.complete = 0 AND u.id = ' . $_SESSION['user']['id'] . ' AND t.date_completed < CURDATE()';
-            $sql_tasks .= ' AND t.complete = 0 AND t.date_completed < CURDATE()';
-                // $sql_date = 'CURDATE()';
+                $sql_tasks .= ' AND t.complete = 0 AND t.date_completed < CURDATE()';
                 break;
         }
 
@@ -101,6 +110,7 @@ if(isset($_SESSION['user'])){
 
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     //    $tasks = get_data_from_db($link, $sql_tasks);
+
 
 
         if($tasks) {
@@ -115,6 +125,8 @@ if(isset($_SESSION['user'])){
             ]);
         }
     }
+
+
 
     $navigation = include_template('navigation.php', [
         'projects' => $projects,

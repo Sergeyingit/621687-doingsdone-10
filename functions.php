@@ -189,7 +189,7 @@ function validate_filled($name) {
 function validate_project($name, $allowed_list) {
     $id = $_POST[$name];
 
-    if (!in_array($name, $allowed_list)) {
+    if (!in_array($id, $allowed_list)) {
         return "Указана несуществующая категория";
     }
 
