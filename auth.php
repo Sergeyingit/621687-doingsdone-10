@@ -52,11 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
 $page_content = include_template('auth.php', [
     'errors' => $errors
 ]);
-
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,

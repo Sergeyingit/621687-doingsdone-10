@@ -2,6 +2,7 @@
 
 require_once('init.php');
 if (isset($_SESSION['user'])) {
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $errors = [];
@@ -50,7 +51,6 @@ if (isset($_SESSION['user'])) {
         }
 
     }
-
 
     $navigation = include_template('navigation.php', [
         'projects' => $projects,

@@ -6,8 +6,6 @@ require_once('init.php');
 
 if (isset($_SESSION['user'])) {
 
-
-// проверка была ли отправлена форма
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $projects_id = array_column($projects, 'id');
         $form_data = $_POST;
@@ -48,7 +46,6 @@ if (isset($_SESSION['user'])) {
 
         $errors = array_filter($errors);
 
-
         if (isset($_FILES['file']['name'])) {
             $tmp_name = $_FILES['file']['tmp_name'];
             $filename = basename($_FILES['file']['name']);
@@ -57,21 +54,17 @@ if (isset($_SESSION['user'])) {
             $form_data['file'] = ($filename) ?? null;
         }
 
-
-        // // Если массив ошибок пустой -
         if (!count($errors)) {
-            // сохраняю данные формы в БД
+
             $form_data['date'] = empty($form_data['date']) ? null : $form_data['date'];
             $sql = 'INSERT INTO tasks (name, project_id, date_completed, file) VALUES (?, ?, ?, ?)';
             $result = set_result_prepare_request($link, $sql, $form_data);
 
-            // при успешном сохранении отправляю на главную
             if ($result) {
                 header('Location: index.php');
             }
         }
     }
-
 
     $navigation = include_template('navigation.php', [
         'projects' => $projects,
