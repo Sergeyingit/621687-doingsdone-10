@@ -1,18 +1,18 @@
 <?php
-require_once ('init.php');
-// require_once ('vendor/autoload.php');
+require_once('init.php');
+require_once('vendor/autoload.php');
 
-// $transport = new Swift_SmtpTransport("phpdemo.ru", 25);
-// $transport->setUsername("keks@phpdemo.ru");
-// $transport->setPassword("htmlacademy");
+$transport = new Swift_SmtpTransport("phpdemo.ru", 25);
+$transport->setUsername("keks@phpdemo.ru");
+$transport->setPassword("htmlacademy");
 
-// $mailer = new Swift_Mailer($transport);
+$mailer = new Swift_Mailer($transport);
 
 $sql = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, u.name, u.email, u.id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.date_completed = CURDATE() AND t.complete = 0';
 
-$result = get_data_from_db($link, $sql);
+$result = get_result_prepare_request($link, $sql);
 
-if($result) {
+if ($result) {
     foreach ($result as $index => $field) {
         $users[] = $field['id'];
     }
@@ -21,12 +21,12 @@ if($result) {
 
     foreach ($user_unique as $users_id => $count_tasks) {
         $sql_user_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, u.name, u.email, u.id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.date_completed = CURDATE() AND t.complete = 0 AND u.id = ' . $users_id;
-        $user_tasks = get_data_from_db($link, $sql_user_tasks);
+        $user_tasks = get_result_prepare_request($link, $sql_user_tasks);
 
         $tasks_list = '';
         foreach ($user_tasks as $task => $field) {
             $recipients[$field['email']] = $field['name'];
-            if($task == 0) {
+            if ($task === 0) {
                 $tasks_list .= $field['task'];
             } elseif ($task > 0) {
                 $tasks_list .= ', ' . $field['task'];
@@ -35,7 +35,7 @@ if($result) {
             $user_name = $field['name'];
         }
 
-        $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list .' на ' . $tasks_date;
+        $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list . ' на ' . $tasks_date;
 
         $message = new Swift_Message();
         $message->setSubject('Уведомление от сервиса «Дела в порядке»');
@@ -44,12 +44,12 @@ if($result) {
         $message->setBody($msg_content, 'text/plain');
         $result = $mailer->send($message);
 
-        if ($result) {
-            print('Письмо успешно отправлено');
-        }
-        else {
-            print('Не удалось отправить письмо');
-        }
+
+    }
+    if ($result) {
+        print('Письмо успешно отправлено');
+    } else {
+        print('Не удалось отправить письмо');
     }
 
 }

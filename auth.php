@@ -2,26 +2,23 @@
 
 require_once('init.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form = $_POST;
 
-    $rules = [
-        'email' => function() {
-            return validate_filled('email');
-        },
-        'password' => function() {
-            return validate_filled('password');
-        }
+    $errors = [];
+    $required = [
+        'email',
+        'password'
     ];
 
-    $errors = [];
+    foreach ($required as $key) {
+        if (empty(trim($_POST[$key]))) {
+            $errors[$key] = 'Это поле должно быть заполнено';
+        }
+    }
 
     foreach ($_POST as $input_name => $input_value) {
-        if (isset($rules[$input_name])) {
-            $rule = $rules[$input_name];
-            $errors[$input_name] = $rule();
-        }
-        if($input_name == 'email' AND empty($errors['email'])) {
+        if ($input_name === 'email' AND empty($errors['email'])) {
             $errors['email'] = !filter_var($input_value, FILTER_VALIDATE_EMAIL) ? 'Email должен быть корректным' : null;
         }
     }
@@ -55,11 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-
 $page_content = include_template('auth.php', [
     'errors' => $errors
 ]);
-
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,

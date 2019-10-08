@@ -2,51 +2,51 @@
 
 require_once('init.php');
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $form = $_POST;
     $errors = [];
 
-    $req_fields = ['email', 'password', 'name'];
+    $required = ['email', 'password', 'name'];
+
+    foreach ($required as $key) {
+        if (empty(trim($_POST[$key]))) {
+            $errors[$key] = 'Это поле должно быть заполнено';
+        }
+
+
+    }
 
     $rules = [
-        'email' => function() {
-            return validate_filled('email');
+        'email' => function () {
+            return validate_length('email', 1, 128);
         },
-        'password' => function() {
-            return validate_filled('password');
-        },
-        'name' => function() {
-            return validate_filled('name');
+        'name' => function () {
+            return validate_length('name', 1, 128);
         }
     ];
 
     foreach ($_POST as $input_name => $input_value) {
-        if (isset($rules[$input_name])) {
+        if (isset($rules[$input_name]) AND empty($errors[$input_name])) {
             $rule = $rules[$input_name];
             $errors[$input_name] = $rule();
         }
-        if($input_name == 'email' AND empty($errors['email'])) {
+
+        if ($input_name === 'email' AND empty($errors['email'])) {
             $errors['email'] = !filter_var($input_value, FILTER_VALIDATE_EMAIL) ? 'Email должен быть корректным' : null;
         }
     }
     $errors = array_filter($errors);
     if (!$errors) {
         $sql = 'SELECT id FROM users WHERE email = ?';
-        //$email = get_prepare_request($link, $sql, [$_POST['email']]);
-        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['email']]);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $user_id = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $user_id = get_result_prepare_request($link, $sql, [$_POST['email']]);
+
         if ($user_id) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
-        }
-        else {
+        } else {
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
             $sql = 'INSERT INTO users (date_add, email, name, password) VALUES (NOW(), ?, ?, ?)';
-            $stmt = db_get_prepare_stmt($link, $sql, [$_POST['email'], $_POST['name'], $password]);
-            $result = mysqli_stmt_execute($stmt);
+            $result = set_result_prepare_request($link, $sql, [$_POST['email'], $_POST['name'], $password]);
         }
 
         if ($result AND !$errors) {
