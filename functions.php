@@ -143,17 +143,33 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 /**
  * Получает результат выполнения подготовленного выражения
  *
+ * Использует функцию db_get_prepare_stmt
  * @param $link mysqli Ресурс соединения
  * @param $sql string SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
  *
  * @return array Массив с данными из БД
  */
-function get_prepare_request($link, $sql, $data = []) {
-    $stmt = db_get_prepare_stmt($link, $sql, $data = []);
+function get_result_prepare_request($link, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Сохраняет результат выполнения подготовленного выражения
+ *
+ * Использует функцию db_get_prepare_stmt
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return bool true в случае успешного выполнения, в противном случае false
+ */
+function set_result_prepare_request($link, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    return mysqli_stmt_execute($stmt);
 }
 
 /**
@@ -220,7 +236,7 @@ function is_date_valid(string $date) : bool {
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД' и чтобы не была меньше текущей даты
  *
- * Внутри использует другую функцию "is_date_valid"
+ * Использует функцию "is_date_valid"
  * @param $name Имя поля
  *
  * @return Возвращает текст ошибки или null, если ошибки нет
@@ -239,5 +255,4 @@ function validate_date($name) {
     } else {
         return 'Не верный формат даты';
     }
-
 }

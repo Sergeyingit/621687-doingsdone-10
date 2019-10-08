@@ -10,7 +10,7 @@ $mailer = new Swift_Mailer($transport);
 
 $sql = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, u.name, u.email, u.id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.date_completed = CURDATE() AND t.complete = 0';
 
-$result = get_data_from_db($link, $sql);
+$result = get_result_prepare_request($link, $sql);
 
 if($result) {
     foreach ($result as $index => $field) {
@@ -21,7 +21,7 @@ if($result) {
 
     foreach ($user_unique as $users_id => $count_tasks) {
         $sql_user_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, u.name, u.email, u.id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.date_completed = CURDATE() AND t.complete = 0 AND u.id = ' . $users_id;
-        $user_tasks = get_data_from_db($link, $sql_user_tasks);
+        $user_tasks = get_result_prepare_request($link, $sql_user_tasks);
 
         $tasks_list = '';
         foreach ($user_tasks as $task => $field) {

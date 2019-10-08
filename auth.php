@@ -29,10 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = array_filter($errors);
 
     $sql = 'SELECT * FROM users WHERE email = ?';
-    $stmt = db_get_prepare_stmt($link, $sql, [$_POST['email']]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $user = get_result_prepare_request($link, $sql, [$_POST['email']]);
 
     if (!count($errors) AND $user) {
         if (password_verify($_POST['password'], $user['password'])) {

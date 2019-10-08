@@ -33,8 +33,7 @@ if(isset($_SESSION['user'])){
 
         if(!count($errors)) {
             $sql = 'INSERT INTO projects (name, user_id) VALUES (?, ?)';
-            $stmt = db_get_prepare_stmt($link, $sql, [$_POST['name'], $_SESSION['user']['id']]);
-            $result = mysqli_stmt_execute($stmt);
+            $result = set_result_prepare_request($link, $sql, [$_POST['name'], $_SESSION['user']['id']]);
 
             if ($result) {
                 header('Location: index.php');
