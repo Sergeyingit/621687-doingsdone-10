@@ -1,18 +1,27 @@
 <?php
 
 require_once('init.php');
-if(isset($_SESSION['user'])){
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (isset($_SESSION['user'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $errors = [];
 
+        $required = ['name'];
+
+        foreach ($required as $key) {
+            if (empty(trim($_POST[$key]))) {
+                $errors[$key] = 'Это поле должно быть заполнено';
+            }
+        }
+
         $rules = [
-            'name' => function() {
-                return validate_filled('name');
+            'name' => function () {
+                return validate_length('name', 1, 128);
             }
         ];
 
         foreach ($_POST as $input_name => $input_value) {
+
             if (isset($rules[$input_name])) {
                 $rule = $rules[$input_name];
                 $errors[$input_name] = $rule();
@@ -20,9 +29,9 @@ if(isset($_SESSION['user'])){
 
             $errors = array_filter($errors);
 
-            if(!$errors) {
-                foreach($projects as $project) {
-                    if($input_value == $project['name']) {
+            if (!$errors) {
+                foreach ($projects as $project) {
+                    if ($input_value === $project['name']) {
                         $errors[$input_name] = 'Проект с таким названием уже существует';
                     }
                 }
@@ -31,7 +40,7 @@ if(isset($_SESSION['user'])){
 
         $errors = array_filter($errors);
 
-        if(!count($errors)) {
+        if (!count($errors)) {
             $sql = 'INSERT INTO projects (name, user_id) VALUES (?, ?)';
             $result = set_result_prepare_request($link, $sql, [$_POST['name'], $_SESSION['user']['id']]);
 
@@ -48,7 +57,7 @@ if(isset($_SESSION['user'])){
         'tasks' => $tasks_all
     ]);
 
-    $page_content = include_template('add-form.php', [
+    $page_content = include_template('add-project.php', [
         'navigation' => $navigation,
         'projects' => $projects,
         'errors' => $errors

@@ -4,25 +4,30 @@ require_once('db.php');
 require_once('init.php');
 
 
-if(isset($_SESSION['user'])) {
+if (isset($_SESSION['user'])) {
 
 
 // проверка была ли отправлена форма
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $projects_id = array_column($projects, 'id');
         $form_data = $_POST;
 
         $errors = [];
 
+        $required = ['name', 'project'];
+
+        foreach ($required as $key) {
+            if (empty(trim($_POST[$key]))) {
+                $errors[$key] = 'Это поле должно быть заполнено';
+            }
+        }
+
         $rules = [
-            'name' => function() {
-                return validate_filled('name');
-            },
-            'project' => function() {
-                return validate_filled('project');
-            },
-            'date' => function() {
+            'date' => function () {
                 return validate_date('date');
+            },
+            'name' => function () {
+                return validate_length('name', 1, 128);
             }
         ];
 
@@ -32,8 +37,8 @@ if(isset($_SESSION['user'])) {
                 $errors[$input_name] = $rule();
             }
 
-            if ($input_name == 'project' AND empty($errors['project'])) {
-                $rule = function() use ($projects_id) {
+            if ($input_name === 'project' AND empty($errors['project'])) {
+                $rule = function () use ($projects_id) {
                     return validate_project('project', $projects_id);
                 };
 
@@ -52,9 +57,10 @@ if(isset($_SESSION['user'])) {
             $form_data['file'] = ($filename) ?? null;
         }
 
+
         // // Если массив ошибок пустой -
         if (!count($errors)) {
-        // сохраняю данные формы в БД
+            // сохраняю данные формы в БД
             $form_data['date'] = empty($form_data['date']) ? null : $form_data['date'];
             $sql = 'INSERT INTO tasks (name, project_id, date_completed, file) VALUES (?, ?, ?, ?)';
             $result = set_result_prepare_request($link, $sql, $form_data);
@@ -65,7 +71,6 @@ if(isset($_SESSION['user'])) {
             }
         }
     }
-
 
 
     $navigation = include_template('navigation.php', [

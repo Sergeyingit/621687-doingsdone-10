@@ -2,26 +2,23 @@
 
 require_once('init.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form = $_POST;
 
-    $rules = [
-        'email' => function() {
-            return validate_filled('email');
-        },
-        'password' => function() {
-            return validate_filled('password');
-        }
+    $errors = [];
+    $required = [
+        'email',
+        'password'
     ];
 
-    $errors = [];
+    foreach ($required as $key) {
+        if (empty(trim($_POST[$key]))) {
+            $errors[$key] = 'Это поле должно быть заполнено';
+        }
+    }
 
     foreach ($_POST as $input_name => $input_value) {
-        if (isset($rules[$input_name])) {
-            $rule = $rules[$input_name];
-            $errors[$input_name] = $rule();
-        }
-        if($input_name == 'email' AND empty($errors['email'])) {
+        if ($input_name === 'email' AND empty($errors['email'])) {
             $errors['email'] = !filter_var($input_value, FILTER_VALIDATE_EMAIL) ? 'Email должен быть корректным' : null;
         }
     }
@@ -29,7 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = array_filter($errors);
 
     $sql = 'SELECT * FROM users WHERE email = ?';
-    $user = get_result_prepare_request($link, $sql, [$_POST['email']]);
+    $stmt = db_get_prepare_stmt($link, $sql, [$_POST['email']]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
     if (!count($errors) AND $user) {
         if (password_verify($_POST['password'], $user['password'])) {

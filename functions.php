@@ -5,7 +5,8 @@
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template($name, array $data = []) {
+function include_template($name, array $data = [])
+{
     $name = 'templates/' . $name;
     $result = '';
 
@@ -29,7 +30,8 @@ function include_template($name, array $data = []) {
  * @param string $project Второй параметр функции. Имя проекта
  * @return integer
  */
-function get_sum_tasks ($tasks_list, $project) {
+function get_sum_tasks($tasks_list, $project)
+{
     $count = 0;
     foreach ($tasks_list as $task) {
         if ($task['category'] === $project) {
@@ -48,7 +50,8 @@ function get_sum_tasks ($tasks_list, $project) {
  * @param string $task_execution_time Параметр функции. Дата проекта
  * @return boolean
  */
-function checks_urgency ($task_execution_time) {
+function checks_urgency($task_execution_time)
+{
     if ($task_execution_time) {
         $hour = 24;
         $dt_now = date_create('now');
@@ -67,26 +70,6 @@ function checks_urgency ($task_execution_time) {
 
 
 /**
- * Возвращает массив засроса sql
- *
- * Принимает ресурс соединения и sql запрос
- * сохраняет результат запроса в переменную, если нет ошибки - возвращает массив
- * с данными из БД
- *
- * @param $link Принимает ресурс соединения
- * @param string $sql Принимает запрос sql
- * @return array
- */
-function get_data_from_db($link, $sql) {
-    $result = mysqli_query($link, $sql);
-    if (!$result) {
-        return mysqli_error($link);
-    }
-
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
-
-/**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
  * @param $link mysqli Ресурс соединения
@@ -95,7 +78,8 @@ function get_data_from_db($link, $sql) {
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function db_get_prepare_stmt($link, $sql, $data = [])
+{
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
@@ -112,11 +96,9 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
             if (is_int($value)) {
                 $type = 'i';
-            }
-            else if (is_string($value)) {
+            } else if (is_string($value)) {
                 $type = 's';
-            }
-            else if (is_double($value)) {
+            } else if (is_double($value)) {
                 $type = 'd';
             }
 
@@ -150,7 +132,8 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
  *
  * @return array Массив с данными из БД
  */
-function get_result_prepare_request($link, $sql, $data = []) {
+function get_result_prepare_request($link, $sql, $data = [])
+{
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -167,7 +150,8 @@ function get_result_prepare_request($link, $sql, $data = []) {
  *
  * @return bool true в случае успешного выполнения, в противном случае false
  */
-function set_result_prepare_request($link, $sql, $data = []) {
+function set_result_prepare_request($link, $sql, $data = [])
+{
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     return mysqli_stmt_execute($stmt);
 }
@@ -178,23 +162,11 @@ function set_result_prepare_request($link, $sql, $data = []) {
  * @param $name Имя поля
  * @return Значение поля полученное из формы
  */
-function get_post_val($name) {
+function get_post_val($name)
+{
     return $_POST[$name] ?? "";
 }
 
-/**
- * Функция проверки обязательного заполнения поля
- *
- * @param $name Имя поля
- * @return Текст ошибки или ничего, если ошибки нет
- */
-function validate_filled($name) {
-    if (empty(trim($_POST[$name]))) {
-        return "Это поле должно быть заполнено";
-    }
-
-    return null;
-}
 
 /**
  * Функция проверки категории проекта
@@ -202,11 +174,30 @@ function validate_filled($name) {
  * @param $name Имя поля
  * @return Текст ошибки или ничего, если ошибки нет
  */
-function validate_project($name, $allowed_list) {
+function validate_project($name, $allowed_list)
+{
     $id = $_POST[$name];
 
     if (!in_array($id, $allowed_list)) {
         return "Указана несуществующая категория";
+    }
+
+    return null;
+}
+
+/**
+ * Функция проверки длинный поля
+ *
+ * @param $name Имя поля
+ * @param $min , $max минимум, максимум
+ * @return Текст ошибки или ничего, если ошибки нет
+ */
+function validate_length($name, $min, $max)
+{
+    $length = strlen(trim($_POST[$name]));
+
+    if ($length < $min or $length > $max) {
+        return "Значение должно быть от $min до $max символов";
     }
 
     return null;
@@ -226,7 +217,8 @@ function validate_project($name, $allowed_list) {
  *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
-function is_date_valid(string $date) : bool {
+function is_date_valid(string $date): bool
+{
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
@@ -241,10 +233,11 @@ function is_date_valid(string $date) : bool {
  *
  * @return Возвращает текст ошибки или null, если ошибки нет
  */
-function validate_date($name) {
+function validate_date($name)
+{
     $date = $_POST[$name];
 
-    if(empty($date)) {
+    if (empty($date)) {
         return null;
     } elseif (is_date_valid($date)) {
         $dt_now = date_create('now');

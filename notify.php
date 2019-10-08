@@ -1,6 +1,6 @@
 <?php
-require_once ('init.php');
-require_once ('vendor/autoload.php');
+require_once('init.php');
+require_once('vendor/autoload.php');
 
 $transport = new Swift_SmtpTransport("phpdemo.ru", 25);
 $transport->setUsername("keks@phpdemo.ru");
@@ -12,7 +12,7 @@ $sql = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.c
 
 $result = get_result_prepare_request($link, $sql);
 
-if($result) {
+if ($result) {
     foreach ($result as $index => $field) {
         $users[] = $field['id'];
     }
@@ -26,7 +26,7 @@ if($result) {
         $tasks_list = '';
         foreach ($user_tasks as $task => $field) {
             $recipients[$field['email']] = $field['name'];
-            if($task == 0) {
+            if ($task === 0) {
                 $tasks_list .= $field['task'];
             } elseif ($task > 0) {
                 $tasks_list .= ', ' . $field['task'];
@@ -35,7 +35,7 @@ if($result) {
             $user_name = $field['name'];
         }
 
-        $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list .' на ' . $tasks_date;
+        $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list . ' на ' . $tasks_date;
 
         $message = new Swift_Message();
         $message->setSubject('Уведомление от сервиса «Дела в порядке»');
@@ -48,8 +48,7 @@ if($result) {
     }
     if ($result) {
         print('Письмо успешно отправлено');
-    }
-    else {
+    } else {
         print('Не удалось отправить письмо');
     }
 
