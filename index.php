@@ -1,6 +1,6 @@
 <?php
 // показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+// $show_complete_tasks = rand(0, 1);
 
 require_once('functions.php');
 
@@ -24,8 +24,16 @@ require_once('init.php');
 
 
 if(isset($_SESSION['user'])){
+
+    if(isset($_GET['show_completed'])) {
+        $show_completed = intval($_GET['show_completed']) ?? null;
+        if($show_completed !== null) {
+            $_SESSION['show_completed'] = $show_completed;
+        }
+    }
+
     if (!empty($_GET['id'])) {
-        $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file, t.id AS id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.complete = 0 AND p.id = ?';
+        $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file, t.id AS id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE p.id = ?';
 
         $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
         mysqli_stmt_execute($stmt);
@@ -50,7 +58,7 @@ if(isset($_SESSION['user'])){
         $page_content = include_template('main.php', [
             'projects' => $projects,
             'tasks' => $tasks,
-            'show_complete_tasks' => $show_complete_tasks
+            'show_complete_tasks' => $_SESSION['show_completed']
         ]);
     }
 
@@ -100,7 +108,7 @@ if(isset($_SESSION['user'])){
             $page_content = include_template('main.php', [
                 'projects' => $projects,
                 'tasks' => $tasks,
-                'show_complete_tasks' => $show_complete_tasks
+                'show_complete_tasks' => $_SESSION['show_completed']
             ]);
         } else {
             $page_content = include_template('main.php', [

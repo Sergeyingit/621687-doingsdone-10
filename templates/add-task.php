@@ -9,18 +9,18 @@
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input <?= isset($errors['name']) ? 'form__input--error' : ''; ?>" type="text" name="name" id="name" value="<?=get_post_val('name'); ?>" placeholder="Введите название">
-            <?= isset($errors['name']) ? '<p class = "form__message">' . $errors['name'] . '</p>' : ''; ?>
+            <input class="form__input <?=isset($errors['name']) ? 'form__input--error' : ''; ?>" type="text" name="name" id="name" value="<?=strip_tags(get_post_val('name')); ?>" placeholder="Введите название">
+            <?=isset($errors['name']) ? '<p class = "form__message">' . $errors['name'] . '</p>' : ''; ?>
           </div>
 
           <div class="form__row">
             <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-            <select class="form__input form__input--select <?= isset($errors['project']) ?  'form__input--error' : ''; ?>" name="project" id="project">
+            <select class="form__input form__input--select <?=isset($errors['project']) ?  'form__input--error' : ''; ?>" name="project" id="project">
             <option value=""></option>
             <?php foreach($projects as $project): ?>
-              <option value="<?= $project['id']; ?>">
-                <?= $project['name']; ?>
+              <option value="<?=$project['id']; ?>">
+                <?=strip_tags($project['name']); ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -30,8 +30,8 @@
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-            <input class="form__input form__input--date <?= isset($errors['date']) ? 'form__input--error' : ''; ?>" type="text" name="date" id="date" value="<?=get_post_val('date'); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
-            <?= isset($errors['date']) ? '<p class = "form__message">' . $errors['date'] . '</p>' : ''; ?>
+            <input class="form__input form__input--date <?=isset($errors['date']) ? 'form__input--error' : ''; ?>" type="text" name="date" id="date" value="<?=strip_tags(get_post_val('date')); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+            <?=isset($errors['date']) ? '<p class = "form__message">' . $errors['date'] . '</p>' : ''; ?>
           </div>
 
           <div class="form__row">

@@ -19,7 +19,7 @@
 
                     <label class="checkbox">
                         <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?= ($show_complete_tasks) ? 'checked' : ''; ?>>
+                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?=($show_complete_tasks) ? 'checked' : ''; ?>>
                         <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
@@ -41,23 +41,23 @@
                         </tr>
                     <?php endif; ?>
                     <?php foreach ($tasks as $task): ?>
-                        <?php if (!$task['is_complete'] or ($task['is_complete'] and $show_complete_tasks)): ?>
+                        <?php if (!$task['is_complete'] or ($task['is_complete'] AND $show_complete_tasks)): ?>
 
                             <tr class="tasks__item task <?= $task['is_complete'] ? 'task--completed' : ''; ?> <?= checks_urgency($task['date']) ? 'task--important' : ''; ?>">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
                                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$task['id'] ?? ''; ?>" <?= $task['is_complete'] ? 'checked' : ''; ?>>
-                                        <span class="checkbox__text"><?= strip_tags($task['task']); ?></span>
+                                        <span class="checkbox__text"><?=strip_tags($task['task']); ?></span>
                                     </label>
                                 </td>
 
                                 <td class="task__file">
                                     <?php if(!empty($task['file'])): ?>
-                                        <a class="download-link" href="uploads/<?=$task['file'];?>"><?=$task['file']; ?></a>
+                                        <a class="download-link" href="uploads/<?=strip_tags($task['file']);?>"><?=strip_tags($task['file']); ?></a>
                                     <?php endif; ?>
                                 </td>
 
-                                <td class="task__date"><?= strip_tags($task['date']); ?></td>
+                                <td class="task__date"><?=strip_tags($task['date']); ?></td>
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
