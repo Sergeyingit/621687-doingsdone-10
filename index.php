@@ -25,26 +25,13 @@ require_once('init.php');
 
 if(isset($_SESSION['user'])){
     if (!empty($_GET['id'])) {
-        $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE p.id = ?';
+        $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file, t.id AS id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.complete = 0 AND p.id = ?';
 
         $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_GET['id']]);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
         // $tasks = get_prepare_request($link, $sql_tasks, [$_GET['id']]);
-        if($show_complete_tasks) {
-            $sql_complate_tasks = $sql_tasks . ' AND t.complete = 1';
-            $stmt = db_get_prepare_stmt($link, $sql_complate_tasks, [$_GET['id']]);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $complate_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            $tasks = array_merge($tasks, $complate_tasks);
-            print('<br><br><br><br><br><br><br>');
-            print_r($complate_tasks);
-            print('<br><br><br><br><br><br><br>');
-            print_r($tasks);
-            print('<br><br><br><br><br><br><br>');
-        }
 
     }
 
@@ -104,14 +91,10 @@ if(isset($_SESSION['user'])){
         }
 
         $stmt = db_get_prepare_stmt($link, $sql_tasks, [$_SESSION['user']['id']]);
-
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-
         $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     //    $tasks = get_data_from_db($link, $sql_tasks);
-
-
 
         if($tasks) {
             $page_content = include_template('main.php', [
@@ -126,7 +109,35 @@ if(isset($_SESSION['user'])){
         }
     }
 
+    // if($show_complete_tasks) {
+    //     $sql_complate_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.complete = 1 AND p.id = ?';
+    //     $stmt = db_get_prepare_stmt($link, $sql_complate_tasks, [$_GET['id']]);
+    //     mysqli_stmt_execute($stmt);
+    //     $result = mysqli_stmt_get_result($stmt);
+    //     $complate_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    //     $tasks = array_merge($tasks, $complate_tasks);
+    //     // print('<br><br><br><br><br><br><br>');
+    //     // print_r($complate_tasks);
+    //     // print('<br><br><br><br><br><br><br>');
+    //     // print_r($tasks);
+    //     // print('<br><br><br><br><br><br><br>');
+    // }
 
+    if(isset($_GET['task_id']) AND isset($_GET['completed'])) {
+        if($_GET['completed'] == 1) {
+            $sql_update = 'UPDATE tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id SET t.complete = 1 WHERE u.id = ? AND t.id = ?';
+            $stmt = db_get_prepare_stmt($link, $sql_update, [$_SESSION['user']['id'], $_GET['task_id']]);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+
+        } else {
+            $sql_update = 'UPDATE tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id SET t.complete = 0 WHERE u.id = ? AND t.id = ?';
+            $stmt = db_get_prepare_stmt($link, $sql_update, [$_SESSION['user']['id'], $_GET['task_id']]);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+        }
+        header('Location: index.php');
+    }
 
     $navigation = include_template('navigation.php', [
         'projects' => $projects,

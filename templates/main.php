@@ -43,10 +43,10 @@
                     <?php foreach ($tasks as $task): ?>
                         <?php if (!$task['is_complete'] or ($task['is_complete'] and $show_complete_tasks)): ?>
 
-                            <tr class="tasks__item task <?= $task['is_complete'] ? 'task--completed' : ''; ?> <?= checks_urgency($task['date']) ? 'task--important' : ''; ?> ">
+                            <tr class="tasks__item task <?= $task['is_complete'] ? 'task--completed' : ''; ?> <?= checks_urgency($task['date']) ? 'task--important' : ''; ?>">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
-                                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
+                                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$task['id'] ?? ''; ?>" <?= $task['is_complete'] ? 'checked' : ''; ?>>
                                         <span class="checkbox__text"><?= strip_tags($task['task']); ?></span>
                                     </label>
                                 </td>
