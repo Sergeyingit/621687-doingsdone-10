@@ -19,7 +19,7 @@ $tasks = $tasks_all;
 if (isset($_GET['show_completed'])) {
     $show_completed = intval($_GET['show_completed']) ?? null;
     if ($show_completed !== null) {
-        $_SESSION['show_completed'] = $show_completed;
+        $_SESSION['show_complete_tasks'] = $show_completed;
     }
 }
 
@@ -42,8 +42,7 @@ if (isset($_GET['id']) AND !in_array($_GET['id'], $id_projects)) {
 } else {
     $page_content = include_template('main.php', [
         'projects' => $projects,
-        'tasks' => $tasks,
-        'show_complete_tasks' => $_SESSION['show_completed']
+        'tasks' => $tasks
     ]);
 }
 
@@ -55,8 +54,7 @@ if (isset($_GET['search'])) {
     if ($tasks) {
         $page_content = include_template('main.php', [
             'projects' => $projects,
-            'tasks' => $tasks,
-            'show_complete_tasks' => $_SESSION['show_completed']
+            'tasks' => $tasks
         ]);
     } else {
         $page_content = include_template('main.php', [
@@ -85,8 +83,7 @@ if (isset($_GET['tasks-filter'])) {
     if ($tasks) {
         $page_content = include_template('main.php', [
             'projects' => $projects,
-            'tasks' => $tasks,
-            'show_complete_tasks' => $_SESSION['show_completed']
+            'tasks' => $tasks
         ]);
         } else {
             $page_content = include_template('main.php', [
