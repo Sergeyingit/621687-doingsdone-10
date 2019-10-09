@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = set_result_prepare_request($link, $sql, [$_POST['email'], $_POST['name'], $password]);
         }
 
-        if ($result AND !$errors) {
+        if (!empty($result) AND !$errors) {
             header('Location: index.php');
             exit();
         }

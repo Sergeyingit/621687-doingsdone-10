@@ -176,13 +176,16 @@ function get_post_val($name)
  */
 function validate_project($name, $allowed_list)
 {
+    if (isset($_POST[$name])) {
     $id = $_POST[$name];
 
-    if (!in_array($id, $allowed_list)) {
-        return 'Указана несуществующая категория';
+        if (isset($id)) {
+            if (!in_array($id, $allowed_list)) {
+                return 'Указана несуществующая категория';
+            }
+            return null;
+        }
     }
-
-    return null;
 }
 
 /**
@@ -194,13 +197,15 @@ function validate_project($name, $allowed_list)
  */
 function validate_length($name, $max)
 {
-    $length = strlen(trim($_POST[$name]));
+    if(isset($_POST[$name])){
+        $length = strlen(trim($_POST[$name]));
 
-    if ($length > $max) {
-        return 'Значение должно быть не больше ' . $max . ' символов';
+        if ($length > $max) {
+            return 'Значение должно быть не больше ' . $max . ' символов';
+        }
+
+        return null;
     }
-
-    return null;
 }
 
 /**

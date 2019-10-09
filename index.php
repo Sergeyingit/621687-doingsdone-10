@@ -75,7 +75,6 @@ if (isset($_GET['task_id']) AND isset($_GET['completed'])) {
     header('Location: index.php');
 }
 
-
 $navigation = include_template('navigation.php', [
     'projects' => $projects,
     'tasks' => $tasks_all

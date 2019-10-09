@@ -76,6 +76,7 @@ $navigation = include_template('navigation.php', [
 
 $page_content = include_template('add-task.php', [
     'navigation' => $navigation,
+    'projects' => $projects,
     'errors' => $errors
 ]);
 
