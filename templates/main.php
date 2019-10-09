@@ -29,8 +29,8 @@
         </label>
     </div>
 
-    <?php if ($error_message) : ?>
-        <?= $error_message; ?>
+    <?php if ((bool)!$tasks) : ?>
+        <?= print('<span> Ничего не найдено по вашему запросу</span>'); ?>
     <?php else : ?>
         <table class="tasks">
             <?php foreach ($tasks as $task): ?>

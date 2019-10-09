@@ -36,31 +36,13 @@ foreach ($projects as $project) {
 
 if (isset($_GET['id']) AND !in_array($_GET['id'], $id_projects)) {
     http_response_code(404);
-    $page_content = include_template('main.php', [
-        'error_message' => 'Ничего не найдено по вашему запросу'
-    ]);
-} else {
-    $page_content = include_template('main.php', [
-        'projects' => $projects,
-        'tasks' => $tasks
-    ]);
+    $tasks = [];
 }
 
 if (isset($_GET['search'])) {
     $search = trim($_GET['search']);
     $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ? AND MATCH(t.name) AGAINST(?)';
     $tasks = get_result_prepare_request($link, $sql_tasks, [$_SESSION['user']['id'], $search]);
-
-    if ($tasks) {
-        $page_content = include_template('main.php', [
-            'projects' => $projects,
-            'tasks' => $tasks
-        ]);
-    } else {
-        $page_content = include_template('main.php', [
-            'error_message' => 'Ничего не найдено по вашему запросу'
-        ]);
-    }
 }
 
 if (isset($_GET['tasks-filter'])) {
@@ -79,17 +61,6 @@ if (isset($_GET['tasks-filter'])) {
     }
 
     $tasks = get_result_prepare_request($link, $sql_tasks, [$_SESSION['user']['id']]);
-
-    if ($tasks) {
-        $page_content = include_template('main.php', [
-            'projects' => $projects,
-            'tasks' => $tasks
-        ]);
-        } else {
-            $page_content = include_template('main.php', [
-            'error_message' => 'Ничего не найдено по вашему запросу'
-        ]);
-    }
 }
 
 if (isset($_GET['task_id']) AND isset($_GET['completed'])) {
@@ -104,12 +75,17 @@ if (isset($_GET['task_id']) AND isset($_GET['completed'])) {
     header('Location: index.php');
 }
 
+
+
+
 $navigation = include_template('navigation.php', [
     'projects' => $projects,
     'tasks' => $tasks_all
 ]);
 
-
+$page_content = include_template('main.php', [
+    'tasks' => $tasks
+]);
 
 $layout_content = include_template('layout.php', [
     'navigation' => $navigation,
