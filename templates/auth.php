@@ -28,7 +28,7 @@
         </div>
 
         <div class="form__row form__row--controls">
-            <?= isset($errors) ? '<p class="error-message">Пожалуйста, исправьте ошибки в форме</p>' : ''; ?>
+            <?=!empty($errors) ? '<p class="error-message">Пожалуйста, исправьте ошибки в форме</p>' : ''; ?>
             <input class="button" type="submit" name="" value="Войти">
         </div>
     </form>

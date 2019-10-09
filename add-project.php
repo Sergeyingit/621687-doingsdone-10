@@ -32,8 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors = array_filter($errors);
         if (empty($errors)) {
             foreach ($projects as $project) {
-                if ($input_value === $project['name']) {
+                $project_field = mb_strtolower ($input_value);
+                $project_db = mb_strtolower($project['name']);
+                if ($project_field === $project_db) {
                     $errors[$input_name] = 'Проект с таким названием уже существует';
+
                 }
             }
         }
@@ -57,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 }
-
+print_r($errors);
 $navigation = include_template('navigation.php', [
     'projects' => $projects,
     'tasks' => $tasks_all
