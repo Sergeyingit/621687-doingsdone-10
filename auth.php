@@ -11,15 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'password'
     ];
 
+    if (isset($_POST['email']) AND empty($errors['email'])) {
+        $errors['email'] = !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) ? 'Email должен быть корректным' : null;
+    }
+
     foreach ($required as $key) {
         if (empty(trim($_POST[$key]))) {
             $errors[$key] = 'Это поле должно быть заполнено';
-        }
-    }
-
-    foreach ($_POST as $input_name => $input_value) {
-        if ($input_name === 'email' AND empty($errors['email'])) {
-            $errors['email'] = !filter_var($input_value, FILTER_VALIDATE_EMAIL) ? 'Email должен быть корректным' : null;
         }
     }
 
@@ -31,17 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = mysqli_stmt_get_result($stmt);
     $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-    if (!count($errors) AND $user) {
+    if (empty($errors) AND $user) {
         if (password_verify($_POST['password'], $user['password'])) {
             $_SESSION['user'] = $user;
         } else {
             $errors['password'] = 'Вы ввели неверный пароль';
         }
     } else {
-        $errors['email'] = $errors['email'] ?? 'Вы ввели неверный email';
+        if(!isset($errors['email']) AND $user['email'] === $_POST['email']) {
+            $errors['email'] = null;
+        } else {
+            $errors['email'] = (isset($errors['email'])) ? $errors['email'] :  'Вы ввели неверный email';
+        }
     }
 
-    if (!count($errors)) {
+    $errors = array_filter($errors);
+    if (empty($errors)) {
         header('Location: /index.php');
         exit();
     }

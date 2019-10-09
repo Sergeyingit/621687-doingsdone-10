@@ -189,15 +189,15 @@ function validate_project($name, $allowed_list)
  * Функция проверки длинный поля
  *
  * @param $name Имя поля
- * @param $min , $max минимум, максимум
+ * @param $max минимум, максимум
  * @return Текст ошибки или ничего, если ошибки нет
  */
-function validate_length($name, $min, $max)
+function validate_length($name, $max)
 {
     $length = strlen(trim($_POST[$name]));
 
-    if ($length < $min or $length > $max) {
-        return "Значение должно быть от $min до $max символов";
+    if ($length > $max) {
+        return "Значение должно быть не больше $max символов";
     }
 
     return null;

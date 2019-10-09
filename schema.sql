@@ -6,7 +6,7 @@ USE doingsdone;
 
 CREATE TABLE projects (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name CHAR(128) NOT NULL UNIQUE,
+  name CHAR(128) NOT NULL,
   user_id INT
 );
 
@@ -30,7 +30,7 @@ CREATE TABLE users (
   date_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   email CHAR(128) NOT NULL UNIQUE,
   name CHAR(128) NOT NULL,
-  password  CHAR(128) NOT NULL
+  password CHAR(128) NOT NULL
 );
 
 
