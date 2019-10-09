@@ -164,7 +164,7 @@ function set_result_prepare_request($link, $sql, $data = [])
  */
 function get_post_val($name)
 {
-    return $_POST[$name] ?? "";
+    return $_POST[$name] ? trim($_POST[$name]) : '';
 }
 
 
@@ -179,7 +179,7 @@ function validate_project($name, $allowed_list)
     $id = $_POST[$name];
 
     if (!in_array($id, $allowed_list)) {
-        return "Указана несуществующая категория";
+        return 'Указана несуществующая категория';
     }
 
     return null;
@@ -197,7 +197,7 @@ function validate_length($name, $max)
     $length = strlen(trim($_POST[$name]));
 
     if ($length > $max) {
-        return "Значение должно быть не больше $max символов";
+        return 'Значение должно быть не больше $max символов';
     }
 
     return null;
