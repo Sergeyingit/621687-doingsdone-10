@@ -12,7 +12,7 @@ $sql = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.c
 
 $result = get_result_prepare_request($link, $sql);
 
-if ($result) {
+if (!empty($result)) {
     foreach ($result as $index => $field) {
         $users[] = $field['id'];
     }
@@ -23,26 +23,28 @@ if ($result) {
         $sql_user_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, u.name, u.email, u.id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE t.date_completed = CURDATE() AND t.complete = 0 AND u.id = ' . $users_id;
         $user_tasks = get_result_prepare_request($link, $sql_user_tasks);
 
-        $tasks_list = '';
-        foreach ($user_tasks as $task => $field) {
-            $recipients[$field['email']] = $field['name'];
-            if ($task === 0) {
-                $tasks_list .= $field['task'];
-            } elseif ($task > 0) {
-                $tasks_list .= ', ' . $field['task'];
+        if(!empty($user_tasks)) {
+            $tasks_list = '';
+            foreach ($user_tasks as $task => $field) {
+                $recipients[$field['email']] = $field['name'];
+                if ($task === 0) {
+                    $tasks_list .= $field['task'];
+                } elseif ($task > 0) {
+                    $tasks_list .= ', ' . $field['task'];
+                }
+                $tasks_date = $field['date'];
+                $user_name = $field['name'];
             }
-            $tasks_date = $field['date'];
-            $user_name = $field['name'];
+
+            $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list . ' на ' . $tasks_date;
+
+            $message = new Swift_Message();
+            $message->setSubject('Уведомление от сервиса «Дела в порядке»');
+            $message->setFrom(['keks@phpdemo.ru' => 'Дела в порядке']);
+            $message->setBcc($recipients);
+            $message->setBody($msg_content, 'text/plain');
+            $result = $mailer->send($message);
         }
-
-        $msg_content = 'Уважаемый, ' . $user_name . '. У вас запланированы задачи: ' . $tasks_list . ' на ' . $tasks_date;
-
-        $message = new Swift_Message();
-        $message->setSubject('Уведомление от сервиса «Дела в порядке»');
-        $message->setFrom(['keks@phpdemo.ru' => 'Дела в порядке']);
-        $message->setBcc($recipients);
-        $message->setBody($msg_content, 'text/plain');
-        $result = $mailer->send($message);
 
 
     }
