@@ -81,7 +81,6 @@ $page_content = include_template('add-task.php', [
 ]);
 
 
-
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title' => $title
