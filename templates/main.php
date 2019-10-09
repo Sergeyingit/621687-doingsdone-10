@@ -10,15 +10,15 @@
     <div class="tasks-controls">
         <nav class="tasks-switch">
             <a href="index.php"
-               class="tasks-switch__item <?= empty($_GET['tasks-filter']) ? 'tasks-switch__item--active' : '' ?>">Все
+               class="tasks-switch__item <?=empty($_GET['tasks-filter']) ? 'tasks-switch__item--active' : '' ?>">Все
                 задачи</a>
             <a href="index.php?tasks-filter=today"
-               class="tasks-switch__item <?= ($_GET['tasks-filter'] === 'today') ? 'tasks-switch__item--active' : '' ?>">Повестка
+               class="tasks-switch__item <?=($_GET['tasks-filter'] === 'today') ? 'tasks-switch__item--active' : '' ?>">Повестка
                 дня</a>
             <a href="index.php?tasks-filter=tomorrow"
-               class="tasks-switch__item <?= ($_GET['tasks-filter'] === 'tomorrow') ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+               class="tasks-switch__item <?=($_GET['tasks-filter'] === 'tomorrow') ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
             <a href="index.php?tasks-filter=past_due"
-               class="tasks-switch__item <?= ($_GET['tasks-filter'] === 'past_due') ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+               class="tasks-switch__item <?=($_GET['tasks-filter'] === 'past_due') ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">
@@ -30,7 +30,7 @@
     </div>
 
     <?php if ((bool)!$tasks) : ?>
-        <?= print('<span> Ничего не найдено по вашему запросу</span>'); ?>
+        <?= print('<span>Ничего не найдено по вашему запросу</span>');?>
     <?php else : ?>
         <table class="tasks">
             <?php foreach ($tasks as $task): ?>

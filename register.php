@@ -2,9 +2,11 @@
 
 require_once('init.php');
 
+$errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $errors = [];
+
 
     $required = ['email', 'password', 'name'];
 
@@ -71,7 +73,6 @@ $page_content = include_template('register.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'user' => $user,
     'title' => 'Дела в порядке'
 ]);
 

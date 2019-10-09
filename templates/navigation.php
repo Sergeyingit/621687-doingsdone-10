@@ -6,9 +6,9 @@
             <?php foreach ($projects as $project): ?>
                 <li class="main-navigation__list-item <?=($project['id'] === intval($_GET['id'])) ? 'main-navigation__list-item--active' : ''; ?>">
                     <a class="main-navigation__list-item-link"
-                       href="index.php?id=<?= $project['id'] ?> "><?= strip_tags($project['name']); ?></a>
+                       href="index.php?id=<?=$project['id'] ?> "><?=strip_tags($project['name']); ?></a>
                     <span
-                        class="main-navigation__list-item-count"><?= get_sum_tasks($tasks, $project['name']); ?></span>
+                        class="main-navigation__list-item-count"><?=get_sum_tasks($tasks, $project['name']); ?></span>
                 </li>
 
             <?php endforeach; ?>

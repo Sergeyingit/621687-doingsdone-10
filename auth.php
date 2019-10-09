@@ -2,10 +2,11 @@
 
 require_once('init.php');
 
+$errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form = $_POST;
 
-    $errors = [];
     $required = [
         'email',
         'password'
@@ -61,7 +62,6 @@ $page_content = include_template('auth.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'user' => $user,
     'title' => 'Дела в порядке'
 ]);
 

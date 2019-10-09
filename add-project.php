@@ -12,9 +12,9 @@ if(empty($_SESSION['user'])) {
     print($layout_content);
     exit();
 }
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $errors = [];
+$errors = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $required = ['name'];
 
@@ -68,10 +68,15 @@ $navigation = include_template('navigation.php', [
 ]);
 
 $page_content = include_template('add-project.php', [
-    'navigation' => $navigation,
-    'projects' => $projects,
-    'errors' => $errors
+    'navigation' => $navigation
 ]);
+
+if ((bool)$errors){
+    $page_content = include_template('add-project.php', [
+        'navigation' => $navigation,
+        'errors' => $errors
+    ]);
+}
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,

@@ -13,11 +13,11 @@ if(empty($_SESSION['user'])) {
     exit();
 }
 
+$errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $projects_id = array_column($projects, 'id');
     $form_data = $_POST;
-
-    $errors = [];
 
     $required = ['name', 'project'];
 
@@ -74,11 +74,15 @@ $navigation = include_template('navigation.php', [
 ]);
 
 $page_content = include_template('add-task.php', [
-    'navigation' => $navigation,
-    'projects' => $projects,
-    'errors' => $errors
+    'navigation' => $navigation
 ]);
 
+if ((bool)$errors) {
+    $page_content = include_template('add-task.php', [
+        'navigation' => $navigation,
+        'errors' => $errors
+    ]);
+}
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
