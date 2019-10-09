@@ -197,7 +197,7 @@ function validate_length($name, $max)
     $length = strlen(trim($_POST[$name]));
 
     if ($length > $max) {
-        return 'Значение должно быть не больше $max символов';
+        return 'Значение должно быть не больше ' . $max . ' символов';
     }
 
     return null;

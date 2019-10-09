@@ -6,7 +6,8 @@ require_once('user-data.php');
 if(empty($_SESSION['user'])) {
     $page_content = include_template('guest.php', []);
     $layout_content = include_template('layout.php', [
-        'content' => $page_content
+        'content' => $page_content,
+        'title' => 'Дела в порядке'
     ]);
     print($layout_content);
     exit();
