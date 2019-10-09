@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 }
-print_r($errors);
+
 $navigation = include_template('navigation.php', [
     'projects' => $projects,
     'tasks' => $tasks_all
