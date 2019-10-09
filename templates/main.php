@@ -13,18 +13,18 @@
                class="tasks-switch__item <?=empty($_GET['tasks-filter']) ? 'tasks-switch__item--active' : '' ?>">Все
                 задачи</a>
             <a href="index.php?tasks-filter=today"
-               class="tasks-switch__item <?=($_GET['tasks-filter'] === 'today') ? 'tasks-switch__item--active' : '' ?>">Повестка
+               class="tasks-switch__item <?=(isset($_GET['tasks-filter']) AND $_GET['tasks-filter'] === 'today') ? 'tasks-switch__item--active' : '' ?>">Повестка
                 дня</a>
             <a href="index.php?tasks-filter=tomorrow"
-               class="tasks-switch__item <?=($_GET['tasks-filter'] === 'tomorrow') ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+               class="tasks-switch__item <?=(isset($_GET['tasks-filter']) AND $_GET['tasks-filter'] === 'tomorrow') ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
             <a href="index.php?tasks-filter=past_due"
-               class="tasks-switch__item <?=($_GET['tasks-filter'] === 'past_due') ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+               class="tasks-switch__item <?=(isset($_GET['tasks-filter']) AND $_GET['tasks-filter'] === 'past_due') ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">
             <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
             <input class="checkbox__input visually-hidden show_completed"
-                   type="checkbox" <?= ($_SESSION['show_complete_tasks'] === 1) ? 'checked' : ''; ?>>
+                   type="checkbox" <?=($_SESSION['show_complete_tasks'] === 1) ? 'checked' : ''; ?>>
             <span class="checkbox__text">Показывать выполненные</span>
         </label>
     </div>

@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+
 $page_content = include_template('register.php', [
     'errors' => $errors
 ]);
@@ -73,7 +74,7 @@ $page_content = include_template('register.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => 'Дела в порядке'
+    'title' => $title
 ]);
 
 print($layout_content);

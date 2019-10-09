@@ -7,7 +7,7 @@ if(empty($_SESSION['user'])) {
     $page_content = include_template('guest.php', []);
     $layout_content = include_template('layout.php', [
         'content' => $page_content,
-        'title' => 'Дела в порядке'
+        'title' => $title
     ]);
     print($layout_content);
     exit();
@@ -76,8 +76,6 @@ if (isset($_GET['task_id']) AND isset($_GET['completed'])) {
 }
 
 
-
-
 $navigation = include_template('navigation.php', [
     'projects' => $projects,
     'tasks' => $tasks_all
@@ -91,7 +89,7 @@ $layout_content = include_template('layout.php', [
     'navigation' => $navigation,
     'content' => $page_content,
     'user' => $_SESSION['user'],
-    'title' => 'Дела в порядке'
+    'title' => $title
 ]);
 
 print($layout_content);

@@ -12,4 +12,5 @@ if (isset($_SESSION['user'])) {
     if(empty($tasks_all)) {
         $tasks_all = [];
     }
+    $user = $_SESSION['user']['name'];
 }

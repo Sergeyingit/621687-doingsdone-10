@@ -62,7 +62,7 @@ $page_content = include_template('auth.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => 'Дела в порядке'
+    'title' => $title
 ]);
 
 print($layout_content);

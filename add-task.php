@@ -73,21 +73,17 @@ $navigation = include_template('navigation.php', [
     'tasks' => $tasks_all
 ]);
 
+
 $page_content = include_template('add-task.php', [
-    'navigation' => $navigation
+    'navigation' => $navigation,
+    'errors' => $errors
 ]);
 
-if ((bool)$errors) {
-    $page_content = include_template('add-task.php', [
-        'navigation' => $navigation,
-        'errors' => $errors
-    ]);
-}
+
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'user' => $_SESSION['user'],
-    'title' => 'Дела в порядке'
+    'title' => $title
 ]);
 
 print($layout_content);

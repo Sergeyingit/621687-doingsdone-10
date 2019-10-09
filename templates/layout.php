@@ -25,7 +25,7 @@
 
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
-                            <p><?= strip_tags($user['name']); ?></p>
+                            <p><?= strip_tags($_SESSION['user']['name']); ?></p>
 
                             <a href="logout.php">Выйти</a>
                         </div>
@@ -39,7 +39,9 @@
         </header>
 
         <div class="content">
+        <?php if(isset($_SESSION['user'])) : ?>
             <?= $navigation; ?>
+        <?php endif ; ?>
             <?= $content; ?>
         </div>
     </div>
