@@ -18,15 +18,15 @@ var tasksCheckbox = document.querySelectorAll('.tasks');
 if (tasksCheckbox.length) {
   for (var i = 0; i < tasksCheckbox.length; i++){
     tasksCheckbox[i].addEventListener('change', function (evt) {
-    var isChecked = (evt.target.checked) ? '1' : '';
+    var isChecked = (evt.target.checked) ? '1' : '0';
     var taskId = evt.target.getAttribute('value');
     var searchParams = new URLSearchParams(window.location.search);
-
     searchParams.set('task_id', taskId);
     searchParams.append('completed', isChecked);
     window.location = '/index.php?' + searchParams.toString();
     });
   }
+
 }
 
 flatpickr('#date', {

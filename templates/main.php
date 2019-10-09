@@ -29,8 +29,8 @@
         </label>
     </div>
 
-    <?php if ((bool)!$tasks) : ?>
-        <?= print('<span>Ничего не найдено по вашему запросу</span>');?>
+    <?php if (empty($tasks)) : ?>
+        <span>Ничего не найдено по вашему запросу</span>
     <?php else : ?>
         <table class="tasks">
             <?php foreach ($tasks as $task): ?>

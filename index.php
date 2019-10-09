@@ -41,12 +41,12 @@ if (isset($_GET['id']) AND !in_array($_GET['id'], $id_projects)) {
 
 if (isset($_GET['search'])) {
     $search = trim($_GET['search']);
-    $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ? AND MATCH(t.name) AGAINST(?)';
+    $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file, t.id AS id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ? AND MATCH(t.name) AGAINST(?)';
     $tasks = get_result_prepare_request($link, $sql_tasks, [$_SESSION['user']['id'], $search]);
 }
 
 if (isset($_GET['tasks-filter'])) {
-    $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ?';
+    $sql_tasks = 'SELECT t.name AS task, t.date_completed AS date, p.name AS category, t.complete AS is_complete, t.file AS file, t.id AS id FROM tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id WHERE u.id = ?';
 
     switch ($_GET['tasks-filter']) {
         case 'today':
@@ -68,7 +68,7 @@ if (isset($_GET['task_id']) AND isset($_GET['completed'])) {
         $sql_update = 'UPDATE tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id SET t.complete = 1 WHERE u.id = ? AND t.id = ?';
         $result = set_result_prepare_request($link, $sql_update, [$_SESSION['user']['id'], $_GET['task_id']]);
 
-    } else {
+    } elseif (intval($_GET['completed']) === 0) {
         $sql_update = 'UPDATE tasks t JOIN projects p ON t.project_id = p.id JOIN users u ON p.user_id = u.id SET t.complete = 0 WHERE u.id = ? AND t.id = ?';
         $result = set_result_prepare_request($link, $sql_update, [$_SESSION['user']['id'], $_GET['task_id']]);
     }
