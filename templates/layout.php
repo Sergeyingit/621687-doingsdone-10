@@ -39,10 +39,10 @@
         </header>
 
         <div class="content">
-        <?php if(isset($_SESSION['user'])) : ?>
-            <?= $navigation; ?>
-        <?php endif ; ?>
-            <?= $content; ?>
+
+            <?=isset($navigation) ? $navigation : ''; ?>
+
+            <?=$content; ?>
         </div>
     </div>
 </div>

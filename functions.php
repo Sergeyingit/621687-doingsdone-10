@@ -164,7 +164,7 @@ function set_result_prepare_request($link, $sql, $data = [])
  */
 function get_post_val($name)
 {
-    return $_POST[$name] ? trim($_POST[$name]) : '';
+    return isset($_POST[$name]) ? trim($_POST[$name]) : '';
 }
 
 

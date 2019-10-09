@@ -24,7 +24,7 @@
         <label class="checkbox">
             <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
             <input class="checkbox__input visually-hidden show_completed"
-                   type="checkbox" <?=($_SESSION['show_complete_tasks'] === 1) ? 'checked' : ''; ?>>
+                   type="checkbox" <?=(isset($_SESSION['show_complete_tasks']) AND $_SESSION['show_complete_tasks'] === 1) ? 'checked' : ''; ?>>
             <span class="checkbox__text">Показывать выполненные</span>
         </label>
     </div>
@@ -34,7 +34,7 @@
     <?php else : ?>
         <table class="tasks">
             <?php foreach ($tasks as $task): ?>
-                <?php if (!$task['is_complete'] or ($task['is_complete'] AND ($_SESSION['show_complete_tasks'] === 1))): ?>
+                <?php if (!$task['is_complete'] or ($task['is_complete'] AND (isset($_SESSION['show_complete_tasks']) AND $_SESSION['show_complete_tasks'] === 1))): ?>
 
                     <tr class="tasks__item task <?= $task['is_complete'] ? 'task--completed' : ''; ?> <?= checks_urgency($task['date']) ? 'task--important' : ''; ?>">
                         <td class="task__select">
